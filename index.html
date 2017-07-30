@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="/socket.io/socket.io.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.min.js"
+      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <title>Chat App</title>
+    <style type="text/css">
+        #footer {
+           position:fixed;
+           left:0px;
+           bottom:0px;
+           height:100px;
+           width:100%;
+           background: #2c3e50;
+           box-shadow: 10px 10px 5px grey;
+        }
+        #input {
+            margin: 20px;
+            max-width: 85%;
+            align-self: center;
+            font-size: 50px;
+            color: #111;
+            padding: 10px;
+        }
+        .form-control {
+            font-size: 20px;
+        }
+        body {
+            background-color: #2ecc71;
+        }
+        #messages {
+            font-size: 20px;
+            margin-left: 10px;
+            margin-right: 20px;
+            margin-top: 10px;
+            margin-bottom: 120px;
+        }
+        li {
+            margin-left: -30px;
+            background-color: #fff;
+            padding-top: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            padding-left: 20px;
+            padding-right: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+        }
+    </style>
+    <script type="text/javascript">
+      var socket = io();
+      $(document).ready(function(){
+        var person = prompt("Please enter your name.");
+        while(person=="" || person == null){
+          person = prompt("You must choose a name.");
+        }
+        $('ul').append($('<li>').html("<b><i>Server :</b></i> Start chatting..."));
+        socket.emit('connected', person)
+        var send = document.getElementById('send');
+        send.addEventListener('click', function(){
+          var message = $('#text').val();
+          if (!message==''){
+            socket.emit('message', { name: person, message: message});
+            $('#text').val("");
+          }
+        });
+        socket.on('message', function(msg){
+          $('ul').append($('<li>').html("<b><i>"+msg.name+":</i> </b>"+msg.message));
+        });
+        socket.on('disconnected', function(msg){
+          $('ul').append($('<li>').html("<b><i>"+msg+"</i></b>"));
+        });
+        socket.on('connected', function(msg){
+          $('ul').append($('<li>').html("<b><i>"+msg+"</i></b>"));
+        });
+      });
+    </script>
+    <style type="text/css">
+      span {
+        background-color: #444;
+        color: #eee;
+        padding: 10px;
+        border-radius: 10px;
+        margin-right: 10px;
+        margin-bottom: 3px;
+      }
+    </style>
+</head>
+<body>
+<div id="messages">
+    <ul style="list-style: none;">
+    </ul>
+</div>
+
+<div id="footer">
+<center>
+    <div class="input-group" id="input">
+      <input id="text" class="form-control" placeholder="Type your message ...">
+      <button type="button" id="send" class="btn btn-primary">Send</button>
+    </div>
+
+</center>
+</div>
+</body>
+</html>
