@@ -72,13 +72,13 @@
           }
         });
         socket.on('message', function(msg){
-          $('ul').append($('<li>').html("<b><i>"+msg.name+":</i> </b>"+msg.message));
+          $('ul').append($('<li>').html("<b><i>"+msg.name+" :</i> </b>"+msg.message));
         });
         socket.on('disconnected', function(msg){
-          $('ul').append($('<li>').html("<b><i>"+msg+"</i></b>"));
+          $('ul').append($('<li>').html("<center><b><i>"+msg+"</i></b></center>"));
         });
         socket.on('connected', function(msg){
-          $('ul').append($('<li>').html("<b><i>"+msg+"</i></b>"));
+          $('ul').append($('<li>').html("<center><b><i>"+msg+"</i></b></center>"));
         });
       });
     </script>
